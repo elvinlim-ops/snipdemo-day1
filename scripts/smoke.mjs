@@ -54,6 +54,7 @@ try {
   assert.equal(page.status, 200);
   const html = await page.text();
   assert.match(html, /<app-root/);
+  assert.equal((await fetch(`${origin}/3rdpartylicenses.txt`)).status, 200);
   const assets = [...html.matchAll(/(?:src|href)="([^"]+\.(?:js|css))"/g)];
   assert.ok(assets.length > 0);
   for (const [, asset] of assets) assert.equal((await fetch(new URL(asset, `${origin}/`))).status, 200);
