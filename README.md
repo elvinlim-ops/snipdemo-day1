@@ -53,3 +53,8 @@ pushes do not trigger another push workflow. Tests and scans must pass before
 publishing GHCR images tagged latest and main's short SHA.
 
 This public workshop demo has no authentication or persistent storage.
+
+Release validation currently reports four high-severity production Angular 19
+dependency findings (and three moderate). The high/critical gate deliberately
+blocks image publication. Do not suppress these findings to ship the tutorial;
+approve a supported Angular upgrade before a production release.

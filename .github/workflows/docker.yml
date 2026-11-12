@@ -1,0 +1,96 @@
+name: Build and push image
+on:
+  push:
+    branches: [main]
+    paths: [bundle, .github/workflows/docker.yml]
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: docker-release
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: '1.4.4'
+      - name: Verify source provenance
+        run: |
+          git submodule status --recursive
+          node --input-type=module -e '
+          import {execFileSync} from "node:child_process";
+          import {readFileSync} from "node:fs";
+          const release=JSON.parse(readFileSync("bundle/release.json"));
+          for(const [name,sha] of Object.entries(release)) {
+            if(execFileSync("git",["rev-parse","HEAD"],{cwd:name,encoding:"utf8"}).trim()!==sha) throw Error(`Unpinned ${name}`);
+          }
+          for(const [source,target] of [["backend/server.js","bundle/server.js"],["cli/cli.js","bundle/cli.js"]]) {
+            if(!readFileSync(source).equals(readFileSync(target))) throw Error(`Modified ${target}`);
+          }'
+      - name: Backend and CLI tests
+        run: |
+          (cd backend && bun test)
+          (cd cli && node --test)
+      - name: Frontend build and browser tests
+        working-directory: frontend
+        run: |
+          npm ci --no-fund
+          npm run build
+          npm test -- --watch=false --browsers=ChromeHeadless
+      - name: Scan production dependencies
+        working-directory: frontend
+        run: npm audit --omit=dev --audit-level=high
+      - name: Bundle smoke test
+        run: node scripts/smoke.mjs
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - name: Build pinned bundle for verification
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: ./bundle
+          load: true
+          tags: snip:verified
+      - name: Container smoke test
+        run: |
+          id=$(docker run -d -p 127.0.0.1:3000:3000 snip:verified)
+          trap 'docker logs "$id"; docker rm -f "$id"' EXIT
+          SNIP_URL=http://127.0.0.1:3000 node scripts/smoke.mjs
+      - name: Scan built image
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        with:
+          image-ref: snip:verified
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: false
+      - uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish the tested image without rebuilding
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          while IFS= read -r tag; do
+            docker tag snip:verified "$tag"
+            docker push "$tag"
+          done <<< "$TAGS"
