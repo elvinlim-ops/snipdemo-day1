@@ -1,0 +1,287 @@
+.page {
+  width: min(100% - 2rem, 54rem);
+  margin: 0 auto;
+  padding: 4.5rem 0 2rem;
+}
+
+.hero {
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  color: #b14c31;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.13em;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0.65rem;
+  font-size: clamp(2.4rem, 7vw, 4.2rem);
+  letter-spacing: -0.065em;
+  line-height: 1.05;
+}
+
+h1 span {
+  color: #c65a39;
+}
+
+.intro {
+  margin-bottom: 0;
+  color: #65625e;
+  font-size: 1.08rem;
+}
+
+.card {
+  border: 1px solid #e8e2dc;
+  border-radius: 1.15rem;
+  background: #fff;
+  box-shadow: 0 12px 34px rgb(52 35 20 / 5%);
+}
+
+.composer {
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.composer h2,
+.section-heading h2 {
+  margin-bottom: 1.1rem;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.input-row {
+  display: flex;
+  gap: 0.65rem;
+}
+
+input {
+  min-width: 0;
+  flex: 1;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid #dcd5cf;
+  border-radius: 0.7rem;
+  background: #fff;
+  color: #26231f;
+  font: inherit;
+}
+
+input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #e9a184;
+  outline-offset: 3px;
+}
+
+input[aria-invalid='true'] {
+  border-color: #b42318;
+}
+
+button {
+  min-height: 2.85rem;
+  padding: 0.75rem 1.15rem;
+  border: 0;
+  border-radius: 0.7rem;
+  background: #bd4d2f;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  background: #9e3d25;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.hint,
+.message {
+  margin: 0.55rem 0 0;
+  font-size: 0.86rem;
+}
+
+.hint {
+  color: #77716b;
+}
+
+.error {
+  color: #a3211a;
+}
+
+.success {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.9rem;
+  margin-top: 1.25rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid #b9deca;
+  border-radius: 0.75rem;
+  background: #eff9f2;
+}
+
+.success span {
+  color: #315d42;
+  font-size: 0.88rem;
+}
+
+.success a,
+.short-link {
+  color: #17613a;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.links-section {
+  margin-top: 3rem;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 0.9rem;
+}
+
+.section-heading .eyebrow {
+  margin-bottom: 0.35rem;
+}
+
+.section-heading h2 {
+  margin-bottom: 0;
+  font-size: 1.45rem;
+}
+
+.refresh-button {
+  min-height: 2.4rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #e0d8d0;
+  background: #fff;
+  color: #453e38;
+  font-size: 0.85rem;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: #f7f3ef;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 0.95rem 1.1rem;
+  border-bottom: 1px solid #eee9e4;
+  vertical-align: top;
+}
+
+th {
+  color: #706a64;
+  font-size: 0.77rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+td {
+  font-size: 0.91rem;
+}
+
+.original-url a {
+  color: #514a44;
+  overflow-wrap: anywhere;
+}
+
+.hits-column {
+  width: 4.5rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.empty,
+.status {
+  margin-bottom: 0;
+  padding: 1.5rem;
+  color: #6d655e;
+  text-align: center;
+}
+
+footer {
+  margin-top: 2.5rem;
+  color: #8a837c;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (max-width: 36rem) {
+  .page {
+    padding-top: 3rem;
+  }
+
+  .input-row {
+    flex-direction: column;
+  }
+
+  .input-row button {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0.8rem 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
