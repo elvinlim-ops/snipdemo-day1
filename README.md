@@ -58,3 +58,8 @@ Release validation currently reports four high-severity production Angular 19
 dependency findings (and three moderate). The high/critical gate deliberately
 blocks image publication. Do not suppress these findings to ship the tutorial;
 approve a supported Angular upgrade before a production release.
+
+The workshop decision is to keep Angular 19 and leave publication blocked.
+Backend/CLI tests, frontend build/browser tests, bundle smoke checks, Docker
+build/container smoke checks, and the image scan passed. No GHCR release image
+was published and no Railway deployment was attempted.
